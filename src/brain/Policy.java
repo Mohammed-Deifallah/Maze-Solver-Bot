@@ -1,5 +1,6 @@
 package brain;
 
+import environment.Action;
 import environment.Cell;
 
 public interface Policy {
@@ -7,4 +8,5 @@ public interface Policy {
 	void setRandActions();
 	void setActions(Cell grid[][]);
 	Cell[][] getGrid();
+	Action[][] getActions();
 }

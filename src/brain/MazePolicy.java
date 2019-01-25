@@ -22,13 +22,13 @@ public class MazePolicy implements Policy {
 
 	@Override
 	public boolean comparePolicy(Policy policy) {
-		Cell[][] maze2 = policy.getGrid();
-		if (maze.length != maze2.length) {
+		Action[][] tempActions = policy.getActions();
+		if (maze.length != tempActions.length) {
 			return false;
 		}
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze.length; j++) {
-				if (maze[i][j] != maze2[i][j]) {
+				if (actions[i][j] != tempActions[i][j]) {
 					return false;
 				}
 			}
@@ -75,6 +75,11 @@ public class MazePolicy implements Policy {
 	@Override
 	public Cell[][] getGrid() {
 		return maze;
+	}
+
+	@Override
+	public Action[][] getActions() {
+		return actions;
 	}
 
 }

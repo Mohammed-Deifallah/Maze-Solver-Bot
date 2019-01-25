@@ -2,6 +2,7 @@ package brain;
 
 import java.util.Random;
 
+import environment.Action;
 import environment.Cell;
 import environment.Utils;
 public class PolicyImp implements Policy{
@@ -45,6 +46,12 @@ public class PolicyImp implements Policy{
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Action[][] getActions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
