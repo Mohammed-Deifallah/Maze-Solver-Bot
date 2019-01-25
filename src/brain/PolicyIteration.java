@@ -1,5 +1,5 @@
 package brain;
 
-public class PolicyIteration implements Policy {
-
+public class PolicyIteration {
+	
 }

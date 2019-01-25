@@ -1,5 +1,6 @@
 package environment;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 public class Cell {
@@ -7,11 +8,14 @@ public class Cell {
 	private Type cell_type;
 	private Subtype cell_subtype;
 	private Action cell_action;
+	private int value;
 	private ArrayList<Action> possible_actions;
+	private Point position;
 
 	public Cell(int row, int column, Subtype subtype) {
 		this.r = row;
 		this.c = column;
+		this.position = new Point(r, c);
 		this.cell_type = Type.OPEN;
 		this.cell_subtype = subtype;
 		possible_actions = new ArrayList<>();
@@ -38,6 +42,14 @@ public class Cell {
 		return possible_actions;
 	}
 
+	public void setV(int v) {
+		this.value = v;
+	}
+
+	public int getV() {
+		return value;
+	}
+
 	public Cell clone() {
 		Cell cell = new Cell(r, c, cell_subtype);
 		cell.setType(cell_type);
@@ -51,6 +63,10 @@ public class Cell {
 			return 1000;
 		}
 		return -1;
+	}
+
+	public Point getPosition() {
+		return position;
 	}
 
 	private void fillPossibleActions() {
