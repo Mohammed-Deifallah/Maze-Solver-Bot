@@ -1,22 +1,18 @@
 package brain;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
 import environment.Action;
 import environment.Cell;
-import environment.Type;
 
 public class MazePolicy implements Policy {
 
 	private Cell[][] maze;
 	private Action[][] actions;
-	private double gamma;
 
-	public MazePolicy(Cell[][] grid, double gamma) {
+	public MazePolicy(Cell[][] grid) {
 		this.maze = grid;
-		this.gamma = gamma;
 		setRandActions();
 	}
 
@@ -51,23 +47,19 @@ public class MazePolicy implements Policy {
 	public void setActions(Cell[][] grid) {
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze.length; j++) {
-				Cell current = maze[i][j];
-				if (current.getType() == Type.BARRIER) {
-					continue;
-				}
-				double maximum = Double.MIN_VALUE;
-				ArrayList<Action> actions = current.getPossibleActions();
-				Action max_action = actions.get(0);
-				int r = current.getReward();
-				for (Action action : actions) {
-					Point next = action.getTransition(current);
-					double v = gamma * maze[next.x][next.y].getV();
-					if (r + v > maximum) {
-						maximum = r + v;
-						max_action = action;
-					}
-				}
-				maze[i][j].setAction(max_action);
+				actions[i][j] = maze[i][j].getAction();
+				/*
+				 * Cell current = maze[i][j]; if (current.getType() ==
+				 * Type.BARRIER) { continue; } double maximum =
+				 * Double.MIN_VALUE; ArrayList<Action> actions =
+				 * current.getPossibleActions(); Action max_action =
+				 * actions.get(0); int r = current.getReward(); for (Action
+				 * action : actions) { Point next =
+				 * action.getTransition(current); double v = gamma *
+				 * maze[next.x][next.y].getV(); if (r + v > maximum) { maximum =
+				 * r + v; max_action = action; } }
+				 * maze[i][j].setAction(max_action);
+				 */
 			}
 		}
 	}

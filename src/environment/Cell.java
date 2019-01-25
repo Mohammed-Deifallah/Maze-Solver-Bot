@@ -8,7 +8,7 @@ public class Cell {
 	private Type cell_type;
 	private Subtype cell_subtype;
 	private Action cell_action;
-	private int value;
+	private double value;
 	private ArrayList<Action> possible_actions;
 	private Point position;
 
@@ -42,11 +42,11 @@ public class Cell {
 		return possible_actions;
 	}
 
-	public void setV(int v) {
+	public void setV(double v) {
 		this.value = v;
 	}
 
-	public int getV() {
+	public double getV() {
 		return value;
 	}
 

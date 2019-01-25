@@ -1,5 +1,5 @@
 package brain;
 
-public class ValueIteration implements Value {
+public class ValueIteration {
 
 }
