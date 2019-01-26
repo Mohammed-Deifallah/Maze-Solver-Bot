@@ -2,20 +2,17 @@ package environment;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cell {
 	private int r, c;
 	private Type cell_type;
 	private Subtype cell_subtype;
-	private Action cell_action;
-	private double value;
-	private ArrayList<Action> possible_actions;
-	private Point position;
+	private List<Action> possible_actions;
 
 	public Cell(int row, int column, Subtype subtype) {
 		this.r = row;
 		this.c = column;
-		this.position = new Point(r, c);
 		this.cell_type = Type.OPEN;
 		this.cell_subtype = subtype;
 		possible_actions = new ArrayList<>();
@@ -24,32 +21,21 @@ public class Cell {
 
 	public void setType(Type type) {
 		this.cell_type = type;
-	}
-
-	public void setAction(Action action) {
-		this.cell_action = action;
-	}
-
-	public Action getAction() {
-		return cell_action;
+		fillPossibleActions();
 	}
 
 	public Type getType() {
 		return cell_type;
 	}
 
-	public ArrayList<Action> getPossibleActions() {
+	public List<Action> getPossibleActions() {
 		return possible_actions;
 	}
 
-	public void setV(double v) {
-		this.value = v;
+	public Point getPosition() {
+		return new Point(r,c);
 	}
-
-	public double getV() {
-		return value;
-	}
-
+	
 	public Cell clone() {
 		Cell cell = new Cell(r, c, cell_subtype);
 		cell.setType(cell_type);
@@ -60,17 +46,14 @@ public class Cell {
 		if (cell_type == Type.BARRIER) {
 			return Integer.MIN_VALUE;
 		} else if (cell_type == Type.END) {
-			return 1000;
+			return 0;
 		}
 		return -1;
 	}
 
-	public Point getPosition() {
-		return position;
-	}
-
 	private void fillPossibleActions() {
-		if (cell_type == Type.BARRIER) {
+		possible_actions.clear();
+		if (cell_type == Type.BARRIER || cell_type == Type.END) {
 			return;
 		}
 		if (cell_subtype == Subtype.MIDDLE) {

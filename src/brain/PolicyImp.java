@@ -4,10 +4,12 @@ import java.util.Random;
 
 import environment.Action;
 import environment.Cell;
-import environment.Utils;
+
 public class PolicyImp implements Policy{
 
 	private Cell grid[][];
+	private Action actions[][];
+	private Double values[][];
 	
 	public PolicyImp(Cell grid[][]) {
 		this.grid = grid;
@@ -16,17 +18,23 @@ public class PolicyImp implements Policy{
 	@Override
 	public void setRandActions() {
 		int size = grid.length;
+		actions = new Action[size][size];
+		Random random = new Random();
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				Random random = new Random(4);
-				grid[i][j].setAction(Utils.selectAction(random.nextInt()));
+				if (grid[i][j].getPossibleActions().size() == 0) {
+					actions[i][j] = Action.NONE;
+				} else {
+					int choice = random.nextInt(grid[i][j].getPossibleActions().size());
+					actions[i][j] = grid[i][j].getPossibleActions().get(choice);
+				}
 			}
-		}	
+		}
 	}
 	
 	@Override
-	public void setActions(Cell grid[][]) {
-		this.grid = grid;	
+	public void setActions(Action actions[][]) {
+		this.actions = actions;	
 	}
 	
 	@Override
@@ -36,11 +44,10 @@ public class PolicyImp implements Policy{
 	
 	@Override
 	public boolean comparePolicy(Policy policy) {
-		Cell newGrid[][] = policy.getGrid();
 		int size = grid.length;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				if (newGrid[i][j].getAction() != grid[i][j].getAction() ) {
+				if (actions[i][j] != policy.getActions()[i][j] ) {
 					return false;
 				}
 			}
@@ -50,8 +57,22 @@ public class PolicyImp implements Policy{
 
 	@Override
 	public Action[][] getActions() {
-		// TODO Auto-generated method stub
-		return null;
+		return actions;
+	}
+
+	@Override
+	public void setValues(Double[][] values) {
+		this.values = values;
+	}
+
+	@Override
+	public Double[][] getValues() {
+		return values;
+	}
+
+	@Override
+	public void setCells(Cell[][] cell) {
+		this.grid = cell;
 	}
 	
 }

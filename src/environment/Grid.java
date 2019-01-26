@@ -1,6 +1,5 @@
 package environment;
 
-import java.util.HashSet;
 import java.util.Random;
 
 public class Grid {
@@ -22,41 +21,30 @@ public class Grid {
 				}
 			}
 		}
-		initGrid((int) ((n * n - 2) * prob));
-
-	}
-
-	public Grid(Grid grid2) {
-		/*
-		 * grid = grid2.getGrid(); size = grid.length;
-		 */
+		grid[0][0].setType(Type.START);
+		grid[n -1][n - 1].setType(Type.END);
+		initGrid(prob);
 	}
 
 	public Cell[][] getGrid() {
 		return this.grid.clone();
 	}
 
-	public Grid clone() {
-		/*
-		 * Grid grid2 = this; return grid2;
-		 */
-		return null;
-	}
-
 	public int getSize() {
 		return size;
 	}
 
-	private void initGrid(int r) {
-		HashSet<Integer> indices = new HashSet<>();
+	private void initGrid(double r) {
 		Random random = new Random();
-		while (indices.size() < r) {
-			// from (0, 1) to (n - 1, n - 2)
-			indices.add(random.nextInt((size * size - 2)) + 1);
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (grid[i][j].getType() == Type.OPEN) {
+					double prob = random.nextDouble();
+					if (prob < r) {
+						grid[i][j].setType(Type.BARRIER);
+					}
+				}
+			}
 		}
-		for (Integer i : indices) {
-			grid[i / size][i % size].setType(Type.BARRIER);
-		}
-		indices.clear();
 	}
 }

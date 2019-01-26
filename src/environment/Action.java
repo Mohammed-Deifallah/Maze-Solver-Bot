@@ -3,7 +3,7 @@ package environment;
 import java.awt.Point;
 
 public enum Action {
-	EAST, NORTH, WEST, SOUTH;
+	EAST, NORTH, WEST, SOUTH,NONE;
 
 	public Point getTransition(Cell cell) {
 		Point nextCell = new Point(cell.getPosition());
@@ -23,6 +23,9 @@ public enum Action {
 
 		case SOUTH:
 			nextCell.x++;
+			break;
+			
+		case NONE:
 			break;
 		}
 		return nextCell;

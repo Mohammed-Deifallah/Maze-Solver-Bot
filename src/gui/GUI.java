@@ -2,15 +2,20 @@ package gui;
 
 import java.awt.EventQueue;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
+import brain.PolicyIteration;
+import brain.ValueIteration;
+import brain.ValueIterationImp;
 import environment.Grid;
 
 public class GUI extends JFrame {
 
 	private Grid grid;
-	private JTextField[][] board;
 	/**
 	 * 
 	 */
@@ -43,27 +48,42 @@ public class GUI extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		setBounds(10, 10, 500, 400);
+		setBounds(10, 10, 500, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getContentPane().setLayout(null);
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-		grid = new Grid(4, .5);
-		board = new JTextField[4][4];
-
-		for (int i = 0, x = 20; i < 4; i++, x += 50) {
-			for (int j = 0, y = 20; j < 4; j++, y += 50) {
-				board[i][j] = new JTextField();
-				board[i][j].setBounds(y, x, 50, 50);
-				if (grid.getGrid()[i][j].getType() == environment.Type.BARRIER) {
-					board[i][j].setText("B");
-				} else {
-					board[i][j].setText("O");
-				}
-				getContentPane().add(board[i][j]);
-			}
+		grid = new Grid(4, 0.2);
+		ValueIteration valueSolver = new ValueIterationImp(1);
+		valueSolver.value_iteration(grid);
+		Double[][] values = valueSolver.getValueIterations().get(valueSolver.getValueIterations().size() - 1);
+		MazeBoard board = new MazeBoard(grid.getSize());
+		ValueBoard board2 = new ValueBoard(grid.getSize());
+		PolicyBoard board3 = new PolicyBoard(grid.getSize());
+		board.updateLabels(grid);
+		board2.updateLabels(values);
+		board3.updateLabels(valueSolver.getOptimalPolicy().getActions());
+		this.add(board);
+		this.add(Box.createVerticalGlue());
+		this.add(board2);
+		this.add(Box.createVerticalGlue());
+		this.add(board3);
+		this.add(Box.createVerticalGlue());
+		PolicyIteration policySolver = new PolicyIteration(0.1);
+		policySolver.policy_iteration(grid);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		System.out.println(policySolver.getPolicies().size());
+		for (int i = 0; i < policySolver.getPolicies().size(); i++) {
+			PolicyBoard minBoard = new PolicyBoard(grid.getSize());
+			minBoard.updateLabels(policySolver.getPolicies().get(i).getActions());
+			panel.add(minBoard);
+			panel.add(Box.createVerticalGlue());
 		}
-		board[0][0].setText("S");
-		board[3][3].setText("T");
+		JScrollPane pane = new JScrollPane(panel);
+		this.add(pane);
+		this.pack();
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setVisible(true);
 	}
 
 }
