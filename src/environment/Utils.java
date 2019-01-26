@@ -14,7 +14,7 @@ public class Utils {
 		Set<Point> visited = new HashSet<Point>();
 		while(!stack.isEmpty()) {
 			Point point = stack.remove(stack.size() - 1);
-			visited.add(grid[0][0].getPosition());
+			visited.add(grid[point.x][point.y].getPosition());
 			if (grid[point.x][point.y].getType() == Type.END) {
 				return true;
 			}
