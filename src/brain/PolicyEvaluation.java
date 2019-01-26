@@ -19,8 +19,10 @@ public class PolicyEvaluation {
 		}
 		
 		double diff = 1;
-		while (diff > 1e-4) {
+		int num_loops = 0;
+		while (diff > 1e-3 && num_loops < 1e9) {
 			diff = 0.0d;
+			num_loops++;
 			Double[][] new_state_values = new Double[n][n];
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {

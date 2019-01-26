@@ -23,6 +23,9 @@ public class PolicyBoard extends JPanel {
 	}
 
 	public void updateLabels(Action[][] actions) {
+		this.removeAll();
+		this.revalidate();
+		this.repaint();
 		for (int i = 0, x = 20; i < n; i++, x += 50) {
 			for (int j = 0, y = 20; j < n; j++, y += 50) {
 				board[i][j] = new JTextField();

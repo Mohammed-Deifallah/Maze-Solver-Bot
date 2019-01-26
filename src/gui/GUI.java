@@ -14,8 +14,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -79,7 +78,7 @@ public class GUI extends JFrame {
 		start.setForeground(Color.WHITE);
 		start.setBounds(625, 400, 100, 50);
 		this.getContentPane().add(start);
-
+		JFrame myFrame = this;
 		start.addActionListener(new ActionListener() {
 
 			@Override
@@ -87,6 +86,18 @@ public class GUI extends JFrame {
 				int size = Integer.parseInt(input_size.getText().trim());
 				double prob = Double.parseDouble(input_prob.getText().trim());
 				double gamma = Double.parseDouble(input_gamma.getText().trim());
+				if (size < 2) {
+					JOptionPane.showMessageDialog(myFrame, "Enter a valid maze size. must be 2 or bigger");
+					return;
+				}
+				if (prob >= 1 || prob < 0) {
+					JOptionPane.showMessageDialog(myFrame, "Enter a valid block probability, must be between 0(inclusive) and 1(exclusive)");
+					return;
+				}
+				if (gamma < 0 || gamma >= 1) {
+					JOptionPane.showMessageDialog(myFrame, "Enter a valid discount factor, must be between 0(inclusive) and 1(exclusive)");
+					return;
+				}
 				input_size.setVisible(false);
 				input_prob.setVisible(false);
 				input_gamma.setVisible(false);
@@ -95,39 +106,27 @@ public class GUI extends JFrame {
 
 				grid = new Grid(size, prob);
 				ValueIteration valueSolver = new ValueIterationImp(gamma);
+				long start = System.currentTimeMillis(); 
 				valueSolver.value_iteration(grid);
-				Double[][] values = valueSolver.getValueIterations().get(valueSolver.getValueIterations().size() - 1);
+				long end = System.currentTimeMillis(); 
 				MazeBoard board = new MazeBoard(grid.getSize());
-				ValueBoard board2 = new ValueBoard(grid.getSize());
-				PolicyBoard board3 = new PolicyBoard(grid.getSize());
+				ValueIterationPanel valuePanel = new ValueIterationPanel(valueSolver.getValueIterations(),
+						valueSolver.getOptimalPolicy().getActions(), end - start);
 				board.updateLabels(grid);
-				board2.updateLabels(values);
-				board3.updateLabels(valueSolver.getOptimalPolicy().getActions());
 				add(board);
 				add(Box.createVerticalGlue());
-				add(board2);
-				add(Box.createVerticalGlue());
-				add(board3);
+				add(valuePanel);
 				add(Box.createVerticalGlue());
 				
 				board.setVisible(true);
-				board2.setVisible(true);
-				board3.setVisible(true);
-				
+				valuePanel.setVisible(true);
 				PolicyIteration policySolver = new PolicyIteration(gamma);
+				start = System.currentTimeMillis(); 
 				policySolver.policy_iteration(grid);
-				JPanel panel = new JPanel();
-				panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-				System.out.println(policySolver.getPolicies().size());
-				for (int i = 0; i < policySolver.getPolicies().size(); i++) {
-					PolicyBoard minBoard = new PolicyBoard(grid.getSize());
-					minBoard.updateLabels(policySolver.getPolicies().get(i).getActions());
-					panel.add(minBoard);
-					panel.add(Box.createVerticalGlue());
-				}
-				JScrollPane pane = new JScrollPane(panel);
-				pane.setVisible(true);
-				add(pane);
+				end = System.currentTimeMillis(); 
+				PolicyIterationPanel policyPanel = new PolicyIterationPanel(policySolver.getPolicies(),
+						policySolver.getValues(), end - start);
+				add(policyPanel);
 			}
 		});
 
