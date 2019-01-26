@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
@@ -15,13 +16,13 @@ public class MazeBoard extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField[][] board;
 	private int n;
-	
+
 	public MazeBoard(int n) {
 		setLayout(new GridLayout(n, n));
 		board = new JTextField[n][n];
 		this.n = n;
 	}
-	
+
 	public void updateLabels(Grid grid) {
 		for (int i = 0, x = 20; i < n; i++, x += 50) {
 			for (int j = 0, y = 20; j < n; j++, y += 50) {
@@ -36,6 +37,9 @@ public class MazeBoard extends JPanel {
 				} else {
 					board[i][j].setText("O");
 				}
+				board[i][j].setHorizontalAlignment(JTextField.CENTER);
+				board[i][j].setFont(new Font("Hobo Std", Font.BOLD, 14));
+				board[i][j].setEditable(false);
 				this.add(board[i][j]);
 			}
 		}
